@@ -3,225 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>38th Birthday: Strategic Happiness Report</title>
+    <title>38th Birthday: Special Strategic Report</title>
+    <!-- 럭셔리 폰트 및 아이콘 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --dark-bg: #0a0f1d; --glass: rgba(255, 255, 255, 0.05); --border: rgba(212, 175, 55, 0.3); }
+        :root { --gold: #d4af37; --dark-bg: #050505; --card-bg: rgba(255, 255, 255, 0.03); --border: rgba(212, 175, 55, 0.4); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
         body { background-color: var(--dark-bg); color: #fff; overflow: hidden; }
 
-        /* 배경 효과 */
-        .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, #1e293b 0%, #0a0f1d 100%); z-index: -1; }
-        .bg-glow { position: fixed; width: 500px; height: 500px; background: var(--gold); filter: blur(150px); opacity: 0.05; border-radius: 50%; z-index: -1; }
+        /* 고급스러운 배경 연출 */
+        .bg-glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%); border-radius: 50%; z-index: -1; filter: blur(80px); }
+        
+        /* 페이지 전환 시스템 */
+        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateY(20px); }
+        .page.active { display: flex; opacity: 1; transform: translateY(0); }
 
-        /* 페이지 시스템 */
-        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
-        .page.active { display: flex; opacity: 1; }
+        /* 메인 카드 디자인 */
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 40px; padding: 50px; width: 100%; max-width: 700px; text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
 
-        /* 유리 질감 카드 */
-        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 50px; width: 100%; max-width: 700px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--gold); letter-spacing: 1px; }
+        .editable { cursor: pointer; transition: 0.3s; border-bottom: 1px dashed transparent; }
+        .editable:hover { border-bottom: 1px dashed var(--gold); color: #fff; }
 
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--gold); }
-        .editable { cursor: pointer; transition: 0.3s; }
-        .editable:hover { color: #fff; text-shadow: 0 0 15px var(--gold); }
-
-        /* 주식 차트 컨셉 그래프 */
-        .chart-box { width: 100%; height: 120px; display: flex; align-items: flex-end; gap: 15px; margin: 30px 0; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-        .bar { flex: 1; background: linear-gradient(to top, var(--gold), #fef3c7); opacity: 0; transition: 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); height: 0; border-radius: 5px 5px 0 0; }
+        /* 2페이지: 성장 차트 효과 */
+        .chart-wrap { width: 100%; height: 140px; display: flex; align-items: flex-end; gap: 15px; margin: 30px 0; border-bottom: 1px solid var(--border); }
+        .bar { flex: 1; background: linear-gradient(to top, var(--gold), #fff); height: 0; transition: 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); border-radius: 4px 4px 0 0; opacity: 0.8; }
         .page.active .bar { opacity: 1; }
 
-        /* 로드맵 타임라인 (새로운 3페이지) */
-        .roadmap { display: flex; flex-direction: column; gap: 20px; text-align: left; margin-top: 20px; }
-        .roadmap-item { display: flex; gap: 20px; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .roadmap-icon { font-size: 24px; color: var(--gold); width: 40px; text-align: center; }
+        /* 3페이지: 로드맵 디자인 (New) */
+        .roadmap-list { text-align: left; margin-top: 20px; display: grid; gap: 20px; }
+        .roadmap-card { display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.05); padding: 15px 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .roadmap-card i { color: var(--gold); font-size: 24px; }
 
-        /* 이미지 프레임 */
-        .photo-frame { width: 100%; height: 350px; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; margin-top: 20px; }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        /* 4페이지: 사진 프레임 */
+        .photo-box { width: 100%; height: 380px; border: 1px solid var(--border); border-radius: 25px; overflow: hidden; margin: 20px 0; cursor: pointer; position: relative; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 룰렛 디자인 */
-        .roulette-container { position: relative; width: 300px; height: 300px; margin: 0 auto 20px; }
-        #canvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--gold); transform: rotate(-90deg); }
-        .pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--gold); z-index: 10; }
+        /* 5페이지: 룰렛 디자인 */
+        .wheel-box { position: relative; width: 320px; height: 320px; margin: 0 auto; border: 10px solid var(--gold); border-radius: 50%; box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); }
+        #canvas { width: 100%; height: 100%; border-radius: 50%; transform: rotate(-90deg); }
+        .wheel-pin { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 35px solid var(--gold); z-index: 10; }
 
-        /* 내비게이션 버튼 */
-        .nav-wrap { position: fixed; bottom: 50px; display: flex; gap: 30px; z-index: 1000; }
-        .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 12px 35px; border-radius: 50px; cursor: pointer; transition: 0.4s; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-        .nav-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
+        /* 내비게이션 바 */
+        .nav-bar { position: fixed; bottom: 50px; display: flex; gap: 40px; z-index: 999; }
+        .nav-link { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 14px 40px; border-radius: 50px; cursor: pointer; transition: 0.4s; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+        .nav-link:hover { background: var(--gold); color: #000; box-shadow: 0 0 40px rgba(212, 175, 55, 0.5); }
 
-        #countdown { font-size: 180px; font-weight: 700; color: var(--gold); font-family: 'Playfair Display'; font-style: italic; }
+        #timer { font-size: 200px; font-family: 'Playfair Display'; color: var(--gold); font-style: italic; text-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
     </style>
 </head>
 <body>
 
-    <div class="bg-gradient"></div>
-    <div class="bg-glow" style="top: 15%; right: 15%;"></div>
+    <div class="bg-glow" style="top: -10%; left: -10%;"></div>
+    <div class="bg-glow" style="bottom: -10%; right: -10%;"></div>
 
-    <div class="nav-wrap" id="nav-area" style="display:none;">
-        <button class="nav-btn" onclick="prevPage()"><i class="fa-solid fa-arrow-left"></i> Prev</button>
-        <button class="nav-btn" onclick="nextPage()">Next <i class="fa-solid fa-arrow-right"></i></button>
+    <!-- 하단 버튼 영역 -->
+    <div class="nav-bar" id="btn-wrap" style="display:none;">
+        <button class="nav-link" onclick="move(-1)"><i class="fa-solid fa-arrow-left"></i> PREV</button>
+        <button class="nav-link" onclick="move(1)">NEXT <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
+    <!-- PAGE 1: 카운트다운 -->
     <div class="page active" id="page-1">
-        <p style="letter-spacing: 12px; opacity: 0.4; margin-bottom: 20px;">REPORT INITIALIZING</p>
-        <div id="countdown">3</div>
+        <p style="letter-spacing: 15px; opacity: 0.3; margin-bottom: 30px;">AUTHENTICATING REPORT</p>
+        <div id="timer">3</div>
     </div>
 
+    <!-- PAGE 2: 데이터 분석 (자산 가치) -->
     <div class="page" id="page-2">
         <div class="glass-card">
-            <h3 style="font-size: 14px; letter-spacing: 5px; margin-bottom: 15px; opacity: 0.7;">ASSET ANALYSIS</h3>
-            <h2 class="editable" contenteditable="true" style="font-size: 32px;">우리 가족 최고의 우량주</h2>
-            <div class="chart-box">
-                <div class="bar" style="--h: 30%"></div>
-                <div class="bar" style="--h: 50%"></div>
-                <div class="bar" style="--h: 75%"></div>
-                <div class="bar" style="--h: 90%"></div>
-                <div class="bar" style="--h: 120%"></div>
+            <h3 style="font-size: 12px; letter-spacing: 6px; margin-bottom: 20px; opacity: 0.6;">EXECUTIVE SUMMARY</h3>
+            <h2 class="editable" contenteditable="true" style="font-size: 36px;">압도적 가치의 행복 우량주</h2>
+            <div class="chart-wrap">
+                <div class="bar" style="--h: 25%"></div>
+                <div class="bar" style="--h: 45%"></div>
+                <div class="bar" style="--h: 70%"></div>
+                <div class="bar" style="--h: 95%"></div>
+                <div class="bar" style="--h: 130%"></div>
             </div>
-            <p class="editable" contenteditable="true" style="line-height: 1.9; font-size: 18px; font-weight: 300;">
-                당신은 지난 <span style="color:var(--gold); font-weight: 700;">2000일</span>간<br>
-                우리 가족의 행복 자산을 <span style="color:var(--gold); font-weight: 700;">연평균 380%</span> 성장시켰습니다.<br>
-                세상 그 어떤 투자보다 완벽한 선택은 당신이었습니다.
+            <p class="editable" contenteditable="true" style="line-height: 2; font-size: 19px; font-weight: 300;">
+                당신은 지난 <span style="color:var(--gold); font-weight: 700;">2000일</span>간 우리 가족의<br>
+                웃음 지수를 <span style="color:var(--gold); font-weight: 700;">연평균 380%</span> 이상 성장시켰습니다.<br>
+                당신이라는 존재는 내 인생 가장 완벽한 투자입니다.
             </p>
         </div>
     </div>
 
+    <!-- PAGE 3: 행복 로드맵 (개편된 페이지) -->
     <div class="page" id="page-3">
         <div class="glass-card">
             <h2 style="margin-bottom: 30px;">Strategic Roadmap 2026</h2>
-            <div class="roadmap">
-                <div class="roadmap-item">
-                    <div class="roadmap-icon"><i class="fa-solid fa-plane-departure"></i></div>
+            <div class="roadmap-list">
+                <div class="roadmap-card">
+                    <i class="fa-solid fa-heart"></i>
                     <div>
-                        <h3 style="font-size: 18px; color: #fff;">Project: Global Refresh</h3>
-                        <p style="font-size: 14px; opacity: 0.7;">하반기, 당신이 꿈꾸던 그 휴양지로의 완벽한 탈출 지원</p>
+                        <h3 style="color:#fff; font-size:18px;">Project: Pure Joy</h3>
+                        <p style="font-size:14px; opacity:0.6;">아내가 원하는 모든 '자기계발'과 '취미' 전폭 지원</p>
                     </div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-icon"><i class="fa-solid fa-gem"></i></div>
+                <div class="roadmap-card">
+                    <i class="fa-solid fa-shrimp"></i>
                     <div>
-                        <h3 style="font-size: 18px; color: #fff;">Project: Personal Brilliance</h3>
-                        <p style="font-size: 14px; opacity: 0.7;">당신만의 시간과 성장을 위한 남편의 전폭적인 육아 서포트</p>
+                        <h3 style="color:#fff; font-size:18px;">Project: Gourmet Tour</h3>
+                        <p style="font-size:14px; opacity:0.6;">좋아하는 해산물을 포함한 전국 맛집 투어 상시 가동</p>
                     </div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-icon"><i class="fa-solid fa-utensils"></i></div>
+                <div class="roadmap-card">
+                    <i class="fa-solid fa-umbrella-beach"></i>
                     <div>
-                        <h3 style="font-size: 18px; color: #fff;">Project: Gourmet Bliss</h3>
-                        <p style="font-size: 14px; opacity: 0.7;">매달 당신의 미각을 깨워줄 '전국 해산물 오마카세' 투어</p>
+                        <h3 style="color:#fff; font-size:18px;">Project: Full Reset</h3>
+                        <p style="font-size:14px; opacity:0.6;">분기별 1회, 육아와 일상에서 벗어난 완벽한 휴식 제공</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- PAGE 4: 비주얼 갤러리 -->
     <div class="page" id="page-4">
         <div class="glass-card">
-            <h2 style="margin-bottom: 25px;">Visualizing Perfection</h2>
-            <div class="photo-frame" onclick="document.getElementById('imgInput').click()">
-                <img id="displayImg" src="https://via.placeholder.com/600x400/1e293b/d4af37?text=Click+to+Add+Your+Photo">
+            <h2 style="margin-bottom: 25px;">The Most Beautiful Asset</h2>
+            <div class="photo-box" onclick="document.getElementById('imgIn').click()">
+                <img id="viewImg" src="https://via.placeholder.com/800x600/111/d4af37?text=Click+to+Add+Your+Photo">
             </div>
-            <p style="margin-top: 25px; font-style: italic; opacity: 0.8;" contenteditable="true" class="editable">
-                "서른여덟의 당신은 그 어느 때보다 눈부시게 아름답습니다."
+            <p class="editable" contenteditable="true" style="margin-top: 25px; font-style: italic; opacity: 0.8;">
+                "38세, 당신의 가장 아름다운 순간을 영원히 기록합니다."
             </p>
         </div>
     </div>
 
+    <!-- PAGE 5: 룰렛 (배당금 지급) -->
     <div class="page" id="page-5">
         <div class="glass-card">
-            <h2 style="margin-bottom: 10px;">Dividend Distribution</h2>
-            <p style="font-size: 14px; opacity: 0.6; margin-bottom: 30px;">생일 맞이 특별 배당금을 확인하세요</p>
-            <div class="roulette-container">
-                <div class="pointer"></div>
-                <canvas id="canvas" width="300" height="300"></canvas>
+            <h2 style="margin-bottom: 40px;">Benefit Distribution</h2>
+            <div class="wheel-box">
+                <div class="wheel-pin"></div>
+                <canvas id="canvas" width="320" height="320"></canvas>
             </div>
-            <button class="nav-btn" id="spin-btn" style="margin-top: 20px; width: 100%;">START SPIN</button>
-            <p id="result-text" style="margin-top: 25px; color: var(--gold); font-size: 24px; font-weight: 700;"></p>
+            <button class="nav-link" id="spin" style="margin-top: 40px; width: 100%; border-width: 2px;">SPIN FOR REWARD</button>
+            <p id="win-text" style="margin-top: 30px; color: var(--gold); font-size: 26px; font-weight: 700;"></p>
         </div>
     </div>
 
-    <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="loadImg(this)">
+    <input type="file" id="imgIn" accept="image/*" style="display:none" onchange="readImg(this)">
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        let curr = 1;
+        let step = 1;
         const total = 5;
 
         // [1] 카운트다운 로직
-        let count = 3;
+        let cd = 3;
         const timer = setInterval(() => {
-            count--;
-            if(count > 0) document.getElementById('countdown').innerText = count;
-            else if(count === 0) {
-                document.getElementById('countdown').innerText = "GO";
+            cd--;
+            if(cd > 0) document.getElementById('timer').innerText = cd;
+            else if(cd === 0) {
+                document.getElementById('timer').innerText = "START";
                 clearInterval(timer);
                 setTimeout(() => {
-                    nextPage();
-                    document.getElementById('nav-area').style.display = 'flex';
+                    move(1);
+                    document.getElementById('btn-wrap').style.display = 'flex';
                 }, 600);
             }
         }, 1000);
 
-        // [2] 페이지 이동
-        function update() {
+        // [2] 페이지 내비게이션
+        function move(dir) {
+            if(step + dir < 1 || step + dir > total) return;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${curr}`).classList.add('active');
+            step += dir;
+            const active = document.getElementById(`page-${step}`);
+            active.classList.add('active');
 
-            // 차트 애니메이션
-            if(curr === 2) {
-                document.querySelectorAll('.bar').forEach(bar => {
-                    bar.style.height = bar.getAttribute('style').split('--h: ')[1];
+            if(step === 2) {
+                document.querySelectorAll('.bar').forEach(b => {
+                    b.style.height = b.getAttribute('style').split('--h: ')[1];
                 });
             }
-            confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 }, colors: ['#d4af37', '#ffffff'] });
+            confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 }, colors: ['#d4af37', '#ffffff'] });
         }
 
-        function nextPage() { if(curr < total) { curr++; update(); } }
-        function prevPage() { if(curr > 1) { curr--; update(); } }
-
-        // [3] 이미지 업로드
-        function loadImg(input) {
+        // [3] 사진 업로드
+        function readImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => document.getElementById('displayImg').src = e.target.result;
+                reader.onload = e => document.getElementById('viewImg').src = e.target.result;
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // [4] 룰렛 로직
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        const gifts = ["육아 퇴근권", "명품 선물권", "현금 50만", "자유 여행권", "무조건 YES"];
-        const colors = ["#0a0f1d", "#d4af37", "#111827", "#b8860b", "#1a1a1a"];
+        // [4] 룰렛 시스템
+        const cvs = document.getElementById("canvas");
+        const ctx = cvs.getContext("2d");
+        const items = ["육아 퇴근권", "명품 선물권", "현금 50만", "자유 여행권", "무조건 YES"];
+        const cols = ["#050505", "#d4af37", "#111111", "#b8860b", "#1a1a1a"];
 
         function draw() {
-            const arc = (2 * Math.PI) / gifts.length;
-            for (let i = 0; i < gifts.length; i++) {
-                ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 150, arc * i, arc * (i + 1)); ctx.fill();
-                ctx.save(); ctx.fillStyle = colors[i] === "#d4af37" ? "#000" : "#d4af37";
-                ctx.translate(150, 150); ctx.rotate(arc * i + arc / 2);
-                ctx.textAlign = "right"; ctx.font = "bold 14px Noto Sans KR";
-                ctx.fillText(gifts[i], 140, 5); ctx.restore();
+            const arc = (2 * Math.PI) / items.length;
+            for (let i = 0; i < items.length; i++) {
+                ctx.beginPath(); ctx.fillStyle = cols[i]; ctx.moveTo(160, 160);
+                ctx.arc(160, 160, 160, arc * i, arc * (i + 1)); ctx.fill();
+                ctx.save(); ctx.fillStyle = cols[i] === "#d4af37" ? "#000" : "#d4af37";
+                ctx.translate(160, 160); ctx.rotate(arc * i + arc / 2);
+                ctx.textAlign = "right"; ctx.font = "bold 15px Noto Sans KR";
+                ctx.fillText(items[i], 150, 5); ctx.restore();
             }
         }
         draw();
 
-        document.getElementById('spin-btn').onclick = function() {
+        document.getElementById('spin').onclick = function() {
             this.disabled = true;
             const target = 3600 + Math.random() * 3600;
             const start = performance.now();
             function frame(time) {
                 let progress = Math.min((time - start) / 4000, 1);
                 let easing = 1 - Math.pow(1 - progress, 4);
-                canvas.style.transform = `rotate(${target * easing - 90}deg)`;
+                cvs.style.transform = `rotate(${target * easing - 90}deg)`;
                 if (progress < 1) requestAnimationFrame(frame);
                 else {
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+                    confetti({ particleCount: 250, spread: 120, origin: { y: 0.5 } });
                     const deg = target % 360;
-                    const idx = Math.floor((360 - deg) / (360 / gifts.length)) % gifts.length;
-                    document.getElementById('result-text').innerText = gifts[idx] + " 당첨! 🥂";
+                    const idx = Math.floor((360 - deg) / (360 / items.length)) % items.length;
+                    document.getElementById('win-text').innerText = items[idx] + " 당첨! 🥂";
                 }
             }
             requestAnimationFrame(frame);
