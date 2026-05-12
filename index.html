@@ -3,166 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>38th Birthday Premium Report</title>
+    <title>38th Birthday: Strategic Happiness Report</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --gold: #c5a059; --dark-bg: #0f172a; --card-bg: #1e293b; --text-gold: #e2c275; }
+        :root { --gold: #d4af37; --dark-bg: #0a0f1d; --glass: rgba(255, 255, 255, 0.05); --border: rgba(212, 175, 55, 0.3); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
         body { background-color: var(--dark-bg); color: #fff; overflow: hidden; }
 
-        /* 페이지 전체 레이아웃 */
-        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); transition: opacity 0.8s ease; opacity: 0; }
+        /* 배경 효과 */
+        .bg-gradient { position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, #1e293b 0%, #0a0f1d 100%); z-index: -1; }
+        .bg-glow { position: fixed; width: 500px; height: 500px; background: var(--gold); filter: blur(150px); opacity: 0.05; border-radius: 50%; z-index: -1; }
+
+        /* 페이지 시스템 */
+        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
         .page.active { display: flex; opacity: 1; }
 
-        /* 고급스러운 폰트 스타일 */
-        h1, h2 { font-family: 'Playfair Display', serif; color: var(--text-gold); }
-        .editable:hover { outline: 2px dashed var(--gold); cursor: text; }
+        /* 유리 질감 카드 */
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 50px; width: 100%; max-width: 700px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; }
 
-        /* 사진 프레임 */
-        .photo-upload-area { width: 100%; max-width: 500px; height: 350px; background: #334155; border: 2px solid var(--gold); border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.3s; }
-        .photo-upload-area:hover { transform: scale(1.02); }
-        .photo-upload-area img { width: 100%; height: 100%; object-fit: cover; }
-        .photo-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); font-size: 0.9rem; pointer-events: none; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--gold); }
+        .editable { cursor: pointer; transition: 0.3s; }
+        .editable:hover { color: #fff; text-shadow: 0 0 15px var(--gold); }
 
-        /* 룰렛 디자인 개선 */
-        .roulette-box { position: relative; width: 320px; height: 320px; margin: 30px 0; border: 10px solid var(--gold); border-radius: 50%; box-shadow: 0 0 30px rgba(197, 160, 89, 0.3); }
-        #canvas { width: 100%; height: 100%; border-radius: 50%; }
-        .spin-btn { background: var(--gold); color: #000; padding: 15px 40px; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+        /* 주식 차트 컨셉 그래프 */
+        .chart-box { width: 100%; height: 120px; display: flex; align-items: flex-end; gap: 15px; margin: 30px 0; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .bar { flex: 1; background: linear-gradient(to top, var(--gold), #fef3c7); opacity: 0; transition: 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); height: 0; border-radius: 5px 5px 0 0; }
+        .page.active .bar { opacity: 1; }
 
-        /* 다음 버튼 */
-        .next-btn { position: fixed; bottom: 40px; right: 40px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 10px 25px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; z-index: 100; }
-        .next-btn:hover { background: var(--gold); color: #000; }
-        
-        /* 카운트다운 */
-        #countdown-wrap { font-size: 150px; font-family: 'Playfair Display'; color: var(--text-gold); font-style: italic; }
+        /* 로드맵 타임라인 (새로운 3페이지) */
+        .roadmap { display: flex; flex-direction: column; gap: 20px; text-align: left; margin-top: 20px; }
+        .roadmap-item { display: flex; gap: 20px; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .roadmap-icon { font-size: 24px; color: var(--gold); width: 40px; text-align: center; }
+
+        /* 이미지 프레임 */
+        .photo-frame { width: 100%; height: 350px; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; margin-top: 20px; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 룰렛 디자인 */
+        .roulette-container { position: relative; width: 300px; height: 300px; margin: 0 auto 20px; }
+        #canvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--gold); transform: rotate(-90deg); }
+        .pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--gold); z-index: 10; }
+
+        /* 내비게이션 버튼 */
+        .nav-wrap { position: fixed; bottom: 50px; display: flex; gap: 30px; z-index: 1000; }
+        .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 12px 35px; border-radius: 50px; cursor: pointer; transition: 0.4s; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .nav-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
+
+        #countdown { font-size: 180px; font-weight: 700; color: var(--gold); font-family: 'Playfair Display'; font-style: italic; }
     </style>
 </head>
 <body>
 
-    <!-- 다음 페이지 버튼 -->
-    <button class="next-btn" onclick="nextPage()" id="global-next" style="display:none;">Next Page <i class="fa-solid fa-arrow-right"></i></button>
+    <div class="bg-gradient"></div>
+    <div class="bg-glow" style="top: 15%; right: 15%;"></div>
 
-    <!-- [1] 카운트다운 -->
+    <div class="nav-wrap" id="nav-area" style="display:none;">
+        <button class="nav-btn" onclick="prevPage()"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+        <button class="nav-btn" onclick="nextPage()">Next <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
     <div class="page active" id="page-1">
-        <p style="letter-spacing: 10px; margin-bottom: 20px; opacity: 0.6;">PRIVATE PRESENTATION</p>
-        <div id="countdown-wrap">3</div>
+        <p style="letter-spacing: 12px; opacity: 0.4; margin-bottom: 20px;">REPORT INITIALIZING</p>
+        <div id="countdown">3</div>
     </div>
 
-    <!-- [2] 오프닝 -->
     <div class="page" id="page-2">
-        <p style="color: var(--gold); font-size: 1.1rem; margin-bottom: 10px;">EST. 1990-02-06</p>
-        <h1 class="editable" contenteditable="true" style="font-size: 3.5rem; text-align: center; margin-bottom: 30px;">Happy 38th Birthday</h1>
-        <p class="editable" contenteditable="true" style="line-height: 1.8; text-align: center; opacity: 0.8;">당신의 가장 찬란한 오늘을 기록합니다.<br>세상에서 가장 소중한 아내님을 위한 특별 보고서.</p>
-    </div>
-
-    <!-- [3] 사진첩 (클릭해서 변경 가능) -->
-    <div class="page" id="page-3">
-        <h2 style="margin-bottom: 30px;">Captured Memories</h2>
-        <div class="photo-upload-area" onclick="document.getElementById('imgInput').click()">
-            <img id="displayImg" src="https://via.placeholder.com/800x600/334155/e2c275?text=Click+to+Add+Your+Photo">
-            <div class="photo-hint" id="photoHint">여기를 클릭해 사진을 선택하세요</div>
+        <div class="glass-card">
+            <h3 style="font-size: 14px; letter-spacing: 5px; margin-bottom: 15px; opacity: 0.7;">ASSET ANALYSIS</h3>
+            <h2 class="editable" contenteditable="true" style="font-size: 32px;">우리 가족 최고의 우량주</h2>
+            <div class="chart-box">
+                <div class="bar" style="--h: 30%"></div>
+                <div class="bar" style="--h: 50%"></div>
+                <div class="bar" style="--h: 75%"></div>
+                <div class="bar" style="--h: 90%"></div>
+                <div class="bar" style="--h: 120%"></div>
+            </div>
+            <p class="editable" contenteditable="true" style="line-height: 1.9; font-size: 18px; font-weight: 300;">
+                당신은 지난 <span style="color:var(--gold); font-weight: 700;">2000일</span>간<br>
+                우리 가족의 행복 자산을 <span style="color:var(--gold); font-weight: 700;">연평균 380%</span> 성장시켰습니다.<br>
+                세상 그 어떤 투자보다 완벽한 선택은 당신이었습니다.
+            </p>
         </div>
-        <p class="editable" contenteditable="true" style="margin-top: 25px; opacity: 0.7;">함께했던 가장 행복한 순간을 기록하세요.</p>
     </div>
 
-    <!-- [4] 진심 어린 편지 -->
-    <div class="page" id="page-4">
-        <div style="max-width: 500px; text-align: left; background: var(--card-bg); padding: 40px; border-radius: 20px; border-left: 8px solid var(--gold);">
-            <h2 style="margin-bottom: 20px;">Dear My Partner,</h2>
-            <div class="editable" contenteditable="true" style="line-height: 2; opacity: 0.9;">
-                38년 전 오늘, 당신이 태어난 건 나에게 가장 큰 행운이야. 2020년 10월 결혼하고 지금까지 내 옆을 지켜줘서 고마워. 육아에 일에 힘들겠지만 내가 항상 당신 편이라는 거 잊지 마. 사랑해!
+    <div class="page" id="page-3">
+        <div class="glass-card">
+            <h2 style="margin-bottom: 30px;">Strategic Roadmap 2026</h2>
+            <div class="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                    <div>
+                        <h3 style="font-size: 18px; color: #fff;">Project: Global Refresh</h3>
+                        <p style="font-size: 14px; opacity: 0.7;">하반기, 당신이 꿈꾸던 그 휴양지로의 완벽한 탈출 지원</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-icon"><i class="fa-solid fa-gem"></i></div>
+                    <div>
+                        <h3 style="font-size: 18px; color: #fff;">Project: Personal Brilliance</h3>
+                        <p style="font-size: 14px; opacity: 0.7;">당신만의 시간과 성장을 위한 남편의 전폭적인 육아 서포트</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-icon"><i class="fa-solid fa-utensils"></i></div>
+                    <div>
+                        <h3 style="font-size: 18px; color: #fff;">Project: Gourmet Bliss</h3>
+                        <p style="font-size: 14px; opacity: 0.7;">매달 당신의 미각을 깨워줄 '전국 해산물 오마카세' 투어</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- [5] 럭셔리 룰렛 -->
-    <div class="page" id="page-5">
-        <h2 style="margin-bottom: 10px;">Executive Benefits</h2>
-        <div class="roulette-box"><canvas id="canvas" width="320" height="320"></canvas></div>
-        <button class="spin-btn" id="spin-btn">행운의 룰렛 돌리기</button>
-        <p id="result-text" style="margin-top: 20px; color: var(--text-gold); font-weight: bold;"></p>
+    <div class="page" id="page-4">
+        <div class="glass-card">
+            <h2 style="margin-bottom: 25px;">Visualizing Perfection</h2>
+            <div class="photo-frame" onclick="document.getElementById('imgInput').click()">
+                <img id="displayImg" src="https://via.placeholder.com/600x400/1e293b/d4af37?text=Click+to+Add+Your+Photo">
+            </div>
+            <p style="margin-top: 25px; font-style: italic; opacity: 0.8;" contenteditable="true" class="editable">
+                "서른여덟의 당신은 그 어느 때보다 눈부시게 아름답습니다."
+            </p>
+        </div>
     </div>
 
-    <!-- 숨겨진 파일 입력 -->
+    <div class="page" id="page-5">
+        <div class="glass-card">
+            <h2 style="margin-bottom: 10px;">Dividend Distribution</h2>
+            <p style="font-size: 14px; opacity: 0.6; margin-bottom: 30px;">생일 맞이 특별 배당금을 확인하세요</p>
+            <div class="roulette-container">
+                <div class="pointer"></div>
+                <canvas id="canvas" width="300" height="300"></canvas>
+            </div>
+            <button class="nav-btn" id="spin-btn" style="margin-top: 20px; width: 100%;">START SPIN</button>
+            <p id="result-text" style="margin-top: 25px; color: var(--gold); font-size: 24px; font-weight: 700;"></p>
+        </div>
+    </div>
+
     <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="loadImg(this)">
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        let currentPage = 1;
-        const totalPages = 5;
+        let curr = 1;
+        const total = 5;
 
         // [1] 카운트다운 로직
         let count = 3;
         const timer = setInterval(() => {
             count--;
-            if(count > 0) document.getElementById('countdown-wrap').innerText = count;
+            if(count > 0) document.getElementById('countdown').innerText = count;
             else if(count === 0) {
-                document.getElementById('countdown-wrap').innerText = "GO";
+                document.getElementById('countdown').innerText = "GO";
                 clearInterval(timer);
                 setTimeout(() => {
                     nextPage();
-                    document.getElementById('global-next').style.display = 'block';
+                    document.getElementById('nav-area').style.display = 'flex';
                 }, 600);
             }
         }, 1000);
 
-        // [2] 페이지 전환
-        function nextPage() {
-            if(currentPage >= totalPages) return;
-            document.getElementById(`page-${currentPage}`).classList.remove('active');
-            currentPage++;
-            document.getElementById(`page-${currentPage}`).classList.add('active');
-            confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, colors: ['#c5a059', '#ffffff'] });
+        // [2] 페이지 이동
+        function update() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${curr}`).classList.add('active');
+
+            // 차트 애니메이션
+            if(curr === 2) {
+                document.querySelectorAll('.bar').forEach(bar => {
+                    bar.style.height = bar.getAttribute('style').split('--h: ')[1];
+                });
+            }
+            confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 }, colors: ['#d4af37', '#ffffff'] });
         }
 
-        // [3] 실시간 사진 첨부 미리보기
+        function nextPage() { if(curr < total) { curr++; update(); } }
+        function prevPage() { if(curr > 1) { curr--; update(); } }
+
+        // [3] 이미지 업로드
         function loadImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('displayImg').src = e.target.result;
-                    document.getElementById('photoHint').style.display = 'none';
-                };
+                reader.onload = e => document.getElementById('displayImg').src = e.target.result;
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // [4] 룰렛 로직 (고급스럽게 개선)
+        // [4] 룰렛 로직
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
-        const gifts = ["육아 퇴근권", "해산물 외식", "현금 50만", "자유 여행권", "명품 선물"];
-        const colors = ["#1e293b", "#c5a059", "#1e293b", "#c5a059", "#1e293b"];
+        const gifts = ["육아 퇴근권", "명품 선물권", "현금 50만", "자유 여행권", "무조건 YES"];
+        const colors = ["#0a0f1d", "#d4af37", "#111827", "#b8860b", "#1a1a1a"];
 
-        function drawRoulette() {
+        function draw() {
             const arc = (2 * Math.PI) / gifts.length;
             for (let i = 0; i < gifts.length; i++) {
-                ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(160, 160);
-                ctx.arc(160, 160, 160, arc * i, arc * (i + 1)); ctx.fill();
-                ctx.save(); ctx.fillStyle = colors[i] === "#c5a059" ? "#000" : "#e2c275"; ctx.translate(160, 160);
-                ctx.rotate(arc * i + arc / 2); ctx.textAlign = "right"; ctx.font = "bold 14px Noto Sans KR";
-                ctx.fillText(gifts[i], 150, 10); ctx.restore();
+                ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 150, arc * i, arc * (i + 1)); ctx.fill();
+                ctx.save(); ctx.fillStyle = colors[i] === "#d4af37" ? "#000" : "#d4af37";
+                ctx.translate(150, 150); ctx.rotate(arc * i + arc / 2);
+                ctx.textAlign = "right"; ctx.font = "bold 14px Noto Sans KR";
+                ctx.fillText(gifts[i], 140, 5); ctx.restore();
             }
         }
-        drawRoulette();
+        draw();
 
         document.getElementById('spin-btn').onclick = function() {
             this.disabled = true;
-            let rotate = 0;
-            const targetRotate = 2000 + Math.random() * 2000;
+            const target = 3600 + Math.random() * 3600;
             const start = performance.now();
-            function animate(time) {
+            function frame(time) {
                 let progress = Math.min((time - start) / 4000, 1);
-                let easing = 1 - Math.pow(1 - progress, 3);
-                canvas.style.transform = `rotate(${targetRotate * easing}deg)`;
-                if (progress < 1) requestAnimationFrame(animate);
+                let easing = 1 - Math.pow(1 - progress, 4);
+                canvas.style.transform = `rotate(${target * easing - 90}deg)`;
+                if (progress < 1) requestAnimationFrame(frame);
                 else {
                     confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
-                    const winner = gifts[Math.floor((360 - (targetRotate * easing % 360)) / (360 / gifts.length)) % gifts.length];
-                    document.getElementById('result-text').innerText = "축하합니다! [ " + winner + " ] 당첨!";
+                    const deg = target % 360;
+                    const idx = Math.floor((360 - deg) / (360 / gifts.length)) % gifts.length;
+                    document.getElementById('result-text').innerText = gifts[idx] + " 당첨! 🥂";
                 }
             }
-            requestAnimationFrame(animate);
+            requestAnimationFrame(frame);
         };
     </script>
 </body>
